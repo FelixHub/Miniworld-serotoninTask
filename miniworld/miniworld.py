@@ -3,6 +3,8 @@ from ctypes import POINTER
 from enum import IntEnum
 from typing import Optional, Tuple
 
+import bisect
+
 import gymnasium as gym
 import numpy as np
 import pyglet
@@ -671,13 +673,20 @@ class MiniWorldEnv(gym.Env):
         """
         Perform one action and update the simulation
         """
-
+        
         self.step_count += 1
-
         rand = self.np_random if self.domain_rand else None
-        fwd_step = self.params.sample(rand, "forward_step")
         fwd_drift = self.params.sample(rand, "forward_drift")
         turn_step = self.params.sample(rand, "turn_step")
+        
+        try :
+            current_section = bisect.bisect_left(self.sections_limit,self.agent.pos[0])
+            current_gain = self.sections_motor_gain[current_section - 1]
+            fwd_step = self.params.sample(rand, "forward_step") * current_gain
+            
+        except :
+            fwd_step = self.params.sample(rand, "forward_step")
+
 
         if action == self.actions.move_forward:
             self.move_agent(fwd_step, fwd_drift)
