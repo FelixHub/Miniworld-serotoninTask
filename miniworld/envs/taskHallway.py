@@ -53,7 +53,10 @@ class TaskHallway(MiniWorldEnv, utils.EzPickle):
                         motor_gains=[0.3,0.6,2,3],
                         min_section_length=5,
                         max_section_length=10,
+                        training=False,
                         **kwargs):
+        # if training, we want the agent to spawn randomly in the hallway, and not in the opposite side to the reward
+        self.training = training
         
         self.nb_sections = nb_sections
         self.proba_change_motor_gain = proba_change_motor_gain
@@ -101,9 +104,10 @@ class TaskHallway(MiniWorldEnv, utils.EzPickle):
         self.box = self.place_entity(Box(color="red"), min_x=room.max_x - 2)
 
         # Place the agent a random distance away from the goal
-        self.place_agent(
-            dir=self.np_random.uniform(-math.pi / 4, math.pi / 4), max_x= 1
-        )
+        if self.training :
+            self.place_agent(dir=self.np_random.uniform(-math.pi / 4, math.pi / 4), max_x= room.max_x - 2)
+        else :
+            self.place_agent(dir=self.np_random.uniform(-math.pi / 4, math.pi / 4), max_x= 1)
 
     def step(self, action):
         obs, reward, termination, truncation, info = super().step(action)
