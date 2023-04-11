@@ -48,15 +48,17 @@ class TaskHallway(MiniWorldEnv, utils.EzPickle):
     
     """
 
-    def __init__(self, nb_sections=5,
+    def __init__(self,  nb_sections=5,
                         proba_change_motor_gain=0.5,
                         motor_gains=[0.3,0.6,2,3],
                         min_section_length=5,
                         max_section_length=10,
                         training=False,
+                        max_episode_steps=250,
                         **kwargs):
         # if training, we want the agent to spawn randomly in the hallway, and not in the opposite side to the reward
         self.training = training
+        self.max_episode_steps = max_episode_steps
         
         self.nb_sections = nb_sections
         self.proba_change_motor_gain = proba_change_motor_gain
@@ -84,7 +86,7 @@ class TaskHallway(MiniWorldEnv, utils.EzPickle):
         print("sections lengths", self.sections_length)
         print("sections motor gains", self.sections_motor_gain)
 
-        MiniWorldEnv.__init__(self, max_episode_steps=250, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=self.max_episode_steps, **kwargs)
         utils.EzPickle.__init__(self, **kwargs)
 
         # Allow only movement actions (left/right/forward) => do we want to allow left / right actions ?
