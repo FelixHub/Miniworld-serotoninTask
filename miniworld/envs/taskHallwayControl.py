@@ -5,7 +5,7 @@ import numpy as np
 from miniworld.entity import Box
 from miniworld.miniworld import MiniWorldEnv
 
-class TaskHallway(MiniWorldEnv, utils.EzPickle):
+class TaskHallwayControl(MiniWorldEnv, utils.EzPickle):
 
     """
     ## Description 
@@ -32,60 +32,43 @@ class TaskHallway(MiniWorldEnv, utils.EzPickle):
 
     ## Arguments
 
-    TaskHallway(nb_sections=10,proba_change_motor_gain=0.1,min_section_length=5,max_section_length=10,motor_gains=[0.3,0.6,2,3])
+    TaskHallwayControl(nb_sections=3,motor_gains=[1,1,1],sections_length=[5,5,10])
 
     nb_sections             : number of sections in the hallway. For each section, there is a probability that the motor gain will be different from 1.
 
-    proba_change_motor_gain : probability that the motor gain will change for a section. 
-                              If the motor gain changes, it will be chosen randomly from the list of possible motor gains.
+    motor_gains             : list of the motor gains for each section
 
-    motor_gains             : list of the possible motor gains to choose from.
+    sections_length : lengths of the hallway sections
 
-    min_section_length      : minimum length of a section. 
-
-    max_section_length      : maximum length of a section. 
-                              The length of a section is chosen randomly between min_section_length and max_section_length.
-    
     """
 
-    def __init__(self,  nb_sections=5,
-                        proba_change_motor_gain=0.5,
-                        motor_gains=[0.3,0.6,2,3],
-                        min_section_length=5,
-                        max_section_length=10,
-                        training=False,
-                        max_episode_steps=250,
+    def __init__(self,  nb_sections=3,
+                        random_gain = False,
+                        motor_gains=[1,0.5,2],
+                        sections_length=[5,5,10],
+                        max_episode_steps=100,
                         **kwargs):
         
         # if training, we want the agent to spawn randomly in the hallway, and not in the opposite side to the reward
-        self.training = training
         self.max_episode_steps = max_episode_steps
         
         self.nb_sections = nb_sections
-        self.proba_change_motor_gain = proba_change_motor_gain
-        self.motor_gains = motor_gains
-        self.min_section_length = min_section_length
-        self.max_section_length = max_section_length
+
+        if random_gain :
+            self.motor_gains = np.random.choice(motor_gains,nb_sections)
+        else :
+            self.motor_gains = motor_gains
 
         self.sections_limit = [-1]
         self.sections_length = []
-        self.sections_motor_gain = []
 
         for s in range(self.nb_sections):
-            length = np.random.randint(self.min_section_length,self.max_section_length)
+            length = sections_length[s]
             self.sections_limit.append(self.sections_limit[-1] + length)
             self.sections_length.append(length)
-            if (np.random.random() < self.proba_change_motor_gain): # remove  (s > 0) and  , actually motor_gain = 1 should not be such a special case 
-                motor_gain = self.np_random.choice(self.motor_gains)
-            else:
-                motor_gain = 1
-            self.sections_motor_gain.append(motor_gain)
 
+        self.sections_motor_gain = motor_gains
         self.total_length = self.sections_limit[-1]
-
-        print("sections limits", self.sections_limit)
-        print("sections lengths", self.sections_length)
-        print("sections motor gains", self.sections_motor_gain)
 
         MiniWorldEnv.__init__(self, max_episode_steps=self.max_episode_steps, **kwargs)
         utils.EzPickle.__init__(self, **kwargs)
@@ -105,13 +88,10 @@ class TaskHallway(MiniWorldEnv, utils.EzPickle):
         # Place the box at the end of the hallway
         self.box = self.place_entity(Box(color="red"), min_x=room.max_x - 2)
 
-        # if training, place the agent such that it is facing the reward
-        if self.training :
-            self.place_agent(dir=self.np_random.uniform(-0.01, 0.01), max_x= 1)
-        else :
-            self.place_agent(dir=self.np_random.uniform(-math.pi / 4, math.pi / 4), max_x= 1)
+        self.place_agent(dir= 0, max_x= 1, min_z=0, max_z=0)
 
     def step(self, action):
+
         obs, reward, termination, truncation, info = super().step(action)
 
         if self.near(self.box):

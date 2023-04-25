@@ -19,6 +19,7 @@ from miniworld.envs.ymaze import YMaze, YMazeLeft, YMazeRight
 
 # new env for the serotonin task
 from miniworld.envs.taskHallway import TaskHallway
+from miniworld.envs.taskHallwayControl import TaskHallwayControl
 
 # Registered environment ids
 from miniworld.miniworld import MiniWorldEnv

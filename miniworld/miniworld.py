@@ -481,6 +481,10 @@ class MiniWorldEnv(gym.Env):
         render_mode: Optional[str] = None,
         view: str = "agent",
     ):
+        
+        # speed gain parameters, can be change whenever needed 
+        self.gain = 1
+
         # Action enumeration for this environment
         self.actions = MiniWorldEnv.Actions
 
@@ -569,7 +573,10 @@ class MiniWorldEnv(gym.Env):
         self.wall_segs = []
 
         # Generate the world
-        self._gen_world()
+        if (options is not None) and options['keep_same_env']:
+            self._gen_world_same_env()
+        else :
+            self._gen_world()
 
         # Check if domain randomization is enabled or not
         rand = self.np_random if self.domain_rand else None
@@ -604,6 +611,30 @@ class MiniWorldEnv(gym.Env):
 
         # Return first observation
         return obs, {}
+    
+    def change_gain(self,random = True, 
+                        gain = None,
+                        motor_gains=[0.5,1,1.5],
+                        glitch=False,
+                        glitch_phase=0):
+
+        if random :
+            new_gain = np.random.choice(motor_gains)
+        else :
+            new_gain = gain
+
+        if glitch :
+            # print('glitch with phase',glitch_phase)
+            pos_agent = self.agent.pos
+            pos_agent[0] = self.agent.pos[0] + glitch_phase
+            self.place_entity(
+                    self.agent,
+                    room=None,
+                    dir=self.agent.dir,
+                    pos=pos_agent
+                )
+        self.gain = new_gain
+
 
     def _get_carry_pos(self, agent_pos, ent):
         """
@@ -677,15 +708,21 @@ class MiniWorldEnv(gym.Env):
         self.step_count += 1
         rand = self.np_random if self.domain_rand else None
         fwd_drift = self.params.sample(rand, "forward_drift")
-        turn_step = self.params.sample(rand, "turn_step")
         
+        '''
         try :
             current_section = bisect.bisect_left(self.sections_limit,self.agent.pos[0])
             current_gain = self.sections_motor_gain[current_section - 1]
+
+            # gain change affect speed of forward movemetn and rotation
             fwd_step = self.params.sample(rand, "forward_step") * current_gain
+            turn_step = self.params.sample(rand, "turn_step") * current_gain
             
         except :
-            fwd_step = self.params.sample(rand, "forward_step")
+        '''
+
+        fwd_step = self.params.sample(rand, "forward_step") * self.gain
+        turn_step = self.params.sample(rand, "turn_step")  # * self.gain
 
 
         if action == self.actions.move_forward:
