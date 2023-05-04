@@ -20,12 +20,12 @@ from miniworld.envs.ymaze import YMaze, YMazeLeft, YMazeRight
 # new env for the serotonin task
 from miniworld.envs.taskHallway import TaskHallway
 from miniworld.envs.taskHallwayControl import TaskHallwayControl
+from miniworld.envs.taskHallwaySimple import TaskHallwaySimple
 
 # Registered environment ids
 from miniworld.miniworld import MiniWorldEnv
 
 env_ids = []
-
 
 def register_envs():
     module_name = __name__

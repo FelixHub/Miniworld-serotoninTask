@@ -708,18 +708,6 @@ class MiniWorldEnv(gym.Env):
         self.step_count += 1
         rand = self.np_random if self.domain_rand else None
         fwd_drift = self.params.sample(rand, "forward_drift")
-        
-        '''
-        try :
-            current_section = bisect.bisect_left(self.sections_limit,self.agent.pos[0])
-            current_gain = self.sections_motor_gain[current_section - 1]
-
-            # gain change affect speed of forward movemetn and rotation
-            fwd_step = self.params.sample(rand, "forward_step") * current_gain
-            turn_step = self.params.sample(rand, "turn_step") * current_gain
-            
-        except :
-        '''
 
         fwd_step = self.params.sample(rand, "forward_step") * self.gain
         turn_step = self.params.sample(rand, "turn_step")  # * self.gain
