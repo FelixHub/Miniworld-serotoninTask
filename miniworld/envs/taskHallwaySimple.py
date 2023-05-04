@@ -32,19 +32,18 @@ class TaskHallwaySimple(MiniWorldEnv, utils.EzPickle):
 
     ## Arguments
 
-    TaskHallway(nb_sections=10,proba_change_motor_gain=0.1,min_section_length=5,max_section_length=10,motor_gains=[0.3,0.6,2,3])
+    min_section_length      : minimum length of the hallway. 
 
-    nb_sections             : number of sections in the hallway. For each section, there is a probability that the motor gain will be different from 1.
+    max_section_length      : maximum length of the hallway. 
+                              The length of the hallway is chosen randomly between min_section_length and max_section_length.
 
-    proba_change_motor_gain : probability that the motor gain will change for a section. 
-                              If the motor gain changes, it will be chosen randomly from the list of possible motor gains.
+    max_episode_steps       : maximum number of steps in an episode.
 
-    motor_gains             : list of the possible motor gains to choose from.
+    facing_forward          : if True, the agent will be placed such that it is facing the reward.
 
-    min_section_length      : minimum length of a section. 
+    reset_keep_same_length  : if True, the length of the hallway will be the same at each reset.
 
-    max_section_length      : maximum length of a section. 
-                              The length of a section is chosen randomly between min_section_length and max_section_length.
+    wall_tex                : texture of the walls of the hallway.
     
     """
 
@@ -52,15 +51,18 @@ class TaskHallwaySimple(MiniWorldEnv, utils.EzPickle):
                       max_section_length=10,
                       max_episode_steps=250,
                       facing_forward=True,
+                      reset_keep_same_length=False,
+                      wall_tex='stripes_big',
                         **kwargs):
         
         self.max_episode_steps = max_episode_steps
         self.min_section_length = min_section_length
         self.max_section_length = max_section_length
         self.facing_forward = facing_forward
+        self.reset_keep_same_length = reset_keep_same_length
+        self.wall_tex = wall_tex
 
         self.total_length = np.random.randint(self.min_section_length,self.max_section_length)
-
         print("hallway length : ", self.total_length)
 
         MiniWorldEnv.__init__(self, max_episode_steps=self.max_episode_steps, **kwargs)
@@ -71,9 +73,17 @@ class TaskHallwaySimple(MiniWorldEnv, utils.EzPickle):
 
     def _gen_world(self):
         # Create a long rectangular room
+
+        if not self.reset_keep_same_length :
+            self.total_length = np.random.randint(self.min_section_length,self.max_section_length)
+            # print("hallway length : ", self.total_length)
+        else :
+            # print('keep same length')
+            pass
+
         room = self.add_rect_room(min_x=-1, max_x=-1 + self.total_length,
                                   min_z=-1, max_z=1,
-                                  wall_tex='stripes_big',
+                                  wall_tex= self.wall_tex,
                                   floor_tex='asphalt',
                                   no_ceiling=True
                                   )

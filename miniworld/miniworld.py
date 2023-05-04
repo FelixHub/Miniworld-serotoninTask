@@ -620,6 +620,7 @@ class MiniWorldEnv(gym.Env):
 
         if random :
             new_gain = np.random.choice(motor_gains)
+            # print('new gain',new_gain)
         else :
             new_gain = gain
 
