@@ -75,7 +75,7 @@ from miniworld.opengl import FrameBuffer, Texture, drawBox
 from miniworld.params import DEFAULT_PARAMS
 
 # Default wall height for room
-DEFAULT_WALL_HEIGHT = 2.74
+DEFAULT_WALL_HEIGHT = 3
 
 # Texture size/density in texels/meter
 TEX_DENSITY = 512
@@ -469,6 +469,9 @@ class MiniWorldEnv(gym.Env):
         # Done completing task
         done = 7
 
+        # we want to have the possiblity that the action is a continuous speed variable !
+        
+
     def __init__(
         self,
         max_episode_steps: int = 1500,
@@ -620,7 +623,6 @@ class MiniWorldEnv(gym.Env):
 
         if random :
             new_gain = np.random.choice(motor_gains)
-            # print('new gain',new_gain)
         else :
             new_gain = gain
 

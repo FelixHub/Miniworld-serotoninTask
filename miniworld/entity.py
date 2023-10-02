@@ -171,7 +171,7 @@ class ImageFrame(Entity):
     Note: the position is in the middle of the frame, on the wall
     """
 
-    def __init__(self, pos, dir, tex_name, width, depth=0.05):
+    def __init__(self, pos, dir, tex_name, width, height=None, depth=0.05):
         super().__init__()
 
         self.pos = pos
@@ -182,7 +182,10 @@ class ImageFrame(Entity):
 
         self.width = width
         self.depth = depth
-        self.height = (float(self.tex.height) / self.tex.width) * self.width
+        if height is None:
+            self.height = (float(self.tex.height) / self.tex.width) * self.width
+        else:
+            self.height = height
 
     @property
     def is_static(self):

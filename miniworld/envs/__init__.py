@@ -21,6 +21,7 @@ from miniworld.envs.ymaze import YMaze, YMazeLeft, YMazeRight
 from miniworld.envs.taskHallway import TaskHallway
 from miniworld.envs.taskHallwayControl import TaskHallwayControl
 from miniworld.envs.taskHallwaySimple import TaskHallwaySimple
+from miniworld.envs.soleneHallway import SoleneHallway
 
 # Registered environment ids
 from miniworld.miniworld import MiniWorldEnv
