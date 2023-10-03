@@ -120,7 +120,7 @@ DEFAULT_PARAMS.set(
     "light_ambient", [0.45, 0.45, 0.45], [0.35, 0.35, 0.35], [0.55, 0.55, 0.55]
 )
 DEFAULT_PARAMS.set("obj_color_bias", [0, 0, 0], [-0.2, -0.2, -0.2], [0.2, 0.2, 0.2])
-DEFAULT_PARAMS.set("forward_step", 0.15, 0.12, 5) #   0.17
+DEFAULT_PARAMS.set("forward_step", 0.1, 0.05, 100) #    0.15, 0.12, 5 
 DEFAULT_PARAMS.set("forward_drift", 0, -0.05, 0.05)
 DEFAULT_PARAMS.set("turn_step", 15, 10, 20)
 DEFAULT_PARAMS.set("bot_radius", 0.4, 0.38, 0.42)

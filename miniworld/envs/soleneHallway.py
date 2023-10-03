@@ -39,13 +39,14 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
     `length`: length of the entire space
     """
 
-    def __init__(self, length=100,is_random=True, is_rewarded=True,is_ambiguous=False, **kwargs):
+    def __init__(self, length=400,is_random=False, is_rewarded=True,is_ambiguous=False, **kwargs):
         assert length >= 2
         self.length = length
         self._size = length
         self.wall_tex = 'noise'
 
         self.is_random = is_random
+        print(kwargs)
 
         if is_random:
             self.is_rewarded = np.random.choice([True,False],p=[0.5,0.5])
@@ -58,7 +59,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
 
 
         
-        MiniWorldEnv.__init__(self, max_episode_steps=250, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=50000, **kwargs)
         utils.EzPickle.__init__(self, length, **kwargs)
 
         # Allow only movement actions (left/right/forward)
@@ -66,21 +67,21 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
 
     def _gen_world(self):
         # Create a long rectangular room
-        room = self.add_rect_room(min_x=-1, max_x=-1 + self.length + 20, min_z=-1, max_z=1,
+        room = self.add_rect_room(min_x=-1, max_x= -1 + self.length + 100, min_z=-1, max_z=1,
                                 wall_tex= self.wall_tex,
                                   floor_tex='asphalt',
                                   no_ceiling=True)
 
         # Place the agent a random distance away from the goal
         self.place_agent(
-            dir=self.np_random.uniform(-0.0001, 0.0001), max_x=1,min_z=-0.0001, max_z=0.0001,
+            dir=self.np_random.uniform(-0.0001, 0.0001), min_x=0.0001, max_x=0.0002,min_z=-0.0001, max_z=0.0001,
         )
         
 
-        rewarded_textures = ["stripes_big","floor_tiles_bw"]
-        unrewarded_textures = ["stripes_big_h","stripe_gradient"]
-        ambiguous_texture = "ceiling_tiles"
-        reward_zone_texture = "concrete"
+        rewarded_textures = ["stripes_wide","triangle"]
+        unrewarded_textures = ["stripes_wide_h","bubble"]
+        ambiguous_texture = "floor_tiles_bw"
+        reward_zone_texture = "white"
 
         
         if self.is_ambiguous:
@@ -164,6 +165,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
             else :
                 print("unrewarded!")
                 reward += 0
+        if new_pos_x > self.length:
             termination = True
 
         return obs, reward, termination, truncation, info
