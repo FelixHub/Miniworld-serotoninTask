@@ -43,7 +43,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
         assert length >= 2
         self.length = length
         self._size = length
-        self.wall_tex = 'noise'
+        self.wall_tex = 'concrete' # not noise
 
         self.is_random = is_random
         print(kwargs)
@@ -77,11 +77,19 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
             dir=self.np_random.uniform(-0.0001, 0.0001), min_x=0.0001, max_x=0.0002,min_z=-0.0001, max_z=0.0001,
         )
         
-
+        '''
+        ### too complicated and the textures are too heterongenous +> we want simpler textures
         rewarded_textures = ["stripes_wide","triangle"]
         unrewarded_textures = ["stripes_wide_h","bubble"]
         ambiguous_texture = "floor_tiles_bw"
         reward_zone_texture = "white"
+        '''
+
+        rewarded_textures = ["colorA","colorB"]
+        unrewarded_textures = ["colorC","colorD"]
+        ambiguous_texture = "colorE"
+        reward_zone_texture = "colorF"
+        
 
         
         if self.is_ambiguous:
