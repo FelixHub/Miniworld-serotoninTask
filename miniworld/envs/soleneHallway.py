@@ -43,7 +43,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
         assert length >= 2
         self.length = length
         self._size = length
-        self.wall_tex = 'stripes_simple' # not noise stripes_simple
+        self.wall_tex = 'concrete' # not noise stripes_simple stripes_simple
 
         self.is_random = is_random
         print(kwargs)
@@ -104,7 +104,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
             second_zone_texture = unrewarded_textures[1]
 
         sign_1 = ImageFrame(
-            pos=[0.2*self.length, 1.5, 1],
+            pos=[0.2*self.length + (0.175*self.length/2), 1.5, 1],
             dir=math.pi / 2,
             tex_name=first_zone_texture,
             width=0.175*self.length,
@@ -112,7 +112,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
             height=3
         )
         sign_2 = ImageFrame(
-            pos=[0.2*self.length, 1.5, -1],
+            pos=[0.2*self.length + (0.175*self.length/2) , 1.5, -1],
             dir=- math.pi / 2,
             tex_name=first_zone_texture,
             width=0.175*self.length,
@@ -121,7 +121,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
         )
 
         sign_3 = ImageFrame(
-            pos=[0.55*self.length, 1.5, 1],
+            pos=[0.55*self.length + (0.175*self.length/2), 1.5, 1],
             dir=math.pi / 2,
             tex_name=second_zone_texture,
             width=0.175*self.length,
@@ -129,7 +129,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
             height=3
         )
         sign_4 = ImageFrame(
-            pos=[0.55*self.length, 1.5, -1],
+            pos=[0.55*self.length + (0.175*self.length/2), 1.5, -1],
             dir=- math.pi / 2,
             tex_name=second_zone_texture,
             width=0.175*self.length,
@@ -138,7 +138,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
         )
 
         sign_5 = ImageFrame(
-            pos=[0.875*self.length, 1.5, 1],
+            pos=[0.875*self.length + (0.05*self.length/2), 1.5, 1],
             dir=math.pi / 2,
             tex_name=reward_zone_texture,
             width=0.05*self.length,
@@ -146,7 +146,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
             height=3
         )
         sign_6 = ImageFrame(
-            pos=[0.875*self.length, 1.5, -1],
+            pos=[0.875*self.length + (0.05*self.length/2), 1.5, -1],
             dir=- math.pi / 2,
             tex_name=reward_zone_texture,
             width=0.05*self.length,
