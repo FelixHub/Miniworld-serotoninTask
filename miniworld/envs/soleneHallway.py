@@ -39,13 +39,14 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
     `length`: length of the entire space
     """
 
-    def __init__(self, length=400,is_random=False, is_rewarded=True,is_ambiguous=False, **kwargs):
+    def __init__(self, length=400,is_random=False, is_rewarded=True,is_ambiguous=False,is_reward_training=False, **kwargs):
         assert length >= 2
         self.length = length
         self._size = length
         self.wall_tex = 'concrete' # not noise stripes_simple stripes_simple
 
         self.is_random = is_random
+        self.is_reward_training = is_reward_training
         print(kwargs)
 
         if is_random:
@@ -91,11 +92,10 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
         reward_zone_texture = "colorF"
         
 
-        
         if self.is_ambiguous:
             first_zone_texture = ambiguous_texture
         elif self.is_rewarded:
-             first_zone_texture = rewarded_textures[0]
+            first_zone_texture = rewarded_textures[0]
         else:
             first_zone_texture = unrewarded_textures[0]
         if self.is_rewarded:
@@ -103,39 +103,45 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
         else:
             second_zone_texture = unrewarded_textures[1]
 
-        sign_1 = ImageFrame(
-            pos=[0.2*self.length + (0.175*self.length/2), 1.5, 1],
-            dir=math.pi / 2,
-            tex_name=first_zone_texture,
-            width=0.175*self.length,
-            depth=0.01,
-            height=3
-        )
-        sign_2 = ImageFrame(
-            pos=[0.2*self.length + (0.175*self.length/2) , 1.5, -1],
-            dir=- math.pi / 2,
-            tex_name=first_zone_texture,
-            width=0.175*self.length,
-            depth=0.01,
-            height=3
-        )
+        if not self.is_reward_training:
+            sign_1 = ImageFrame(
+                pos=[0.2*self.length + (0.175*self.length/2), 1.5, 1],
+                dir=math.pi / 2,
+                tex_name=first_zone_texture,
+                width=0.175*self.length,
+                depth=0.01,
+                height=3
+            )
+            sign_2 = ImageFrame(
+                pos=[0.2*self.length + (0.175*self.length/2) , 1.5, -1],
+                dir=- math.pi / 2,
+                tex_name=first_zone_texture,
+                width=0.175*self.length,
+                depth=0.01,
+                height=3
+            )
 
-        sign_3 = ImageFrame(
-            pos=[0.55*self.length + (0.175*self.length/2), 1.5, 1],
-            dir=math.pi / 2,
-            tex_name=second_zone_texture,
-            width=0.175*self.length,
-            depth=0.01,
-            height=3
-        )
-        sign_4 = ImageFrame(
-            pos=[0.55*self.length + (0.175*self.length/2), 1.5, -1],
-            dir=- math.pi / 2,
-            tex_name=second_zone_texture,
-            width=0.175*self.length,
-            depth=0.01,
-            height=3
-        )
+            sign_3 = ImageFrame(
+                pos=[0.55*self.length + (0.175*self.length/2), 1.5, 1],
+                dir=math.pi / 2,
+                tex_name=second_zone_texture,
+                width=0.175*self.length,
+                depth=0.01,
+                height=3
+            )
+            sign_4 = ImageFrame(
+                pos=[0.55*self.length + (0.175*self.length/2), 1.5, -1],
+                dir=- math.pi / 2,
+                tex_name=second_zone_texture,
+                width=0.175*self.length,
+                depth=0.01,
+                height=3
+            )
+
+            self.entities.append(sign_1)
+            self.entities.append(sign_2)
+            self.entities.append(sign_3)
+            self.entities.append(sign_4)
 
         sign_5 = ImageFrame(
             pos=[0.875*self.length + (0.05*self.length/2), 1.5, 1],
@@ -154,10 +160,6 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
             height=3
         )
 
-        self.entities.append(sign_1)
-        self.entities.append(sign_2)
-        self.entities.append(sign_3)
-        self.entities.append(sign_4)
         self.entities.append(sign_5)
         self.entities.append(sign_6)
 
