@@ -67,6 +67,22 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
         self.action_space = spaces.Discrete(self.actions.move_forward + 1)
 
     def _gen_world(self):
+
+
+        simple_patterns = False
+        if simple_patterns :
+            unrewarded_textures = ["colorA","colorB"]
+            rewarded_textures = ["colorC","colorD"]
+            ambiguous_texture = "colorE"
+            reward_zone_texture = "colorF"
+        else :
+            ### too complicated and the textures are too heterongenous +> we want simpler textures
+            rewarded_textures = ["stripes_wide","triangle"]
+            unrewarded_textures = ["stripes_wide_h","bubble"]
+            ambiguous_texture = "floor_tiles_bw"
+            reward_zone_texture = "white"
+
+
         # Create a long rectangular room
         room = self.add_rect_room(min_x=-1, max_x= -1 + self.length + 100, min_z=-1, max_z=1,
                                 wall_tex= self.wall_tex,
@@ -77,19 +93,7 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
         self.place_agent(
             dir=self.np_random.uniform(-0.0001, 0.0001), min_x=0.0001, max_x=0.0002,min_z=-0.0001, max_z=0.0001,
         )
-        
-        '''
-        ### too complicated and the textures are too heterongenous +> we want simpler textures
-        rewarded_textures = ["stripes_wide","triangle"]
-        unrewarded_textures = ["stripes_wide_h","bubble"]
-        ambiguous_texture = "floor_tiles_bw"
-        reward_zone_texture = "white"
-        '''
 
-        unrewarded_textures = ["colorA","colorB"]
-        rewarded_textures = ["colorC","colorD"]
-        ambiguous_texture = "colorE"
-        reward_zone_texture = "colorF"
         
 
         if self.is_ambiguous:
