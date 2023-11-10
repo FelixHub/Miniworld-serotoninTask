@@ -74,12 +74,12 @@ class SoleneHallway(MiniWorldEnv, utils.EzPickle):
             unrewarded_textures = ["colorA","colorB"]
             rewarded_textures = ["colorC","colorD"]
             ambiguous_texture = "colorE"
-            reward_zone_texture = "colorF"
+            reward_zone_texture = "colorF" # colorB
         else :
             ### too complicated and the textures are too heterongenous +> we want simpler textures
-            rewarded_textures = ["stripes_wide","triangle"]
-            unrewarded_textures = ["stripes_wide_h","bubble"]
-            ambiguous_texture = "floor_tiles_bw"
+            rewarded_textures = ["patternA","patternB"]
+            unrewarded_textures = ["patternC","patternD"]
+            ambiguous_texture = "patternE"
             reward_zone_texture = "white"
 
 
